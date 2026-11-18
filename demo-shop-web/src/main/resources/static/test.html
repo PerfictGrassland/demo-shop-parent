@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo Shop 跨域接口测试</title>
+    <style>
+        :root {
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            color: #172033;
+            background: #f3f6fb;
+        }
+
+        body {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 18px 56px;
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+        }
+
+        .hint {
+            color: #526078;
+            line-height: 1.6;
+        }
+
+        .base-url, .card {
+            border: 1px solid #dce3ee;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 2px 8px #15294b0a;
+        }
+
+        .base-url {
+            display: grid;
+            grid-template-columns: minmax(100px, 150px) 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 16px;
+            margin: 20px 0 28px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 14px;
+        }
+
+        .card {
+            padding: 18px;
+        }
+
+        .route {
+            margin: -4px 0 14px;
+            color: #526078;
+            font: 13px Consolas, monospace;
+            overflow-wrap: anywhere;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        input, textarea {
+            box-sizing: border-box;
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 9px 10px;
+            font: 14px Consolas, "Microsoft YaHei", monospace;
+        }
+
+        textarea {
+            min-height: 125px;
+            resize: vertical;
+            tab-size: 2;
+        }
+
+        button {
+            margin-top: 12px;
+            border: 0;
+            border-radius: 6px;
+            padding: 9px 15px;
+            background: #1769d2;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0e56b3;
+        }
+
+        button:disabled {
+            cursor: wait;
+            opacity: .65;
+        }
+
+        .status {
+            display: inline-block;
+            margin-left: 9px;
+            color: #526078;
+            font-size: 13px;
+        }
+
+        .status.error {
+            color: #b42318;
+        }
+
+        pre {
+            max-height: 260px;
+            overflow: auto;
+            margin: 12px 0 0;
+            padding: 12px;
+            border-radius: 6px;
+            background: #101827;
+            color: #d7e2f2;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 20px 12px 40px;
+            }
+
+            .base-url {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>Demo Shop 跨域接口测试</h1>
+<p class="hint">
+    请通过本地静态服务器打开本页，再请求另一个端口上的后端，以触发浏览器 CORS 检查。
+    本页默认请求 localhost:8081；数据库新增接口会真实写入数据。<br/>
+    http://127.0.0.1:8080/test.html <br/>
+    http://10.212.134.108:8080/test.html <br/>
+    http://10.130.12.124:8080/test.html <br/>
+    http://172.24.192.1:8080/test.html <br/>
+</p>
+
+<div class="base-url">
+    <label for="baseUrl">后端地址</label>
+    <input id="baseUrl" type="url" value="http://localhost:8081" spellcheck="false">
+</div>
+
+<section>
+    <h2>内存示例接口</h2>
+    <p class="hint">内存数据不写入数据库。</p>
+    <div class="cards">
+        <form class="card request" data-method="GET" data-path="/demo/users">
+            <h3>用户列表</h3>
+            <p class="route">GET /demo/users</p>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+
+        <form class="card request" data-method="GET" data-path="/demo/users/{id}">
+            <h3>查询单个用户</h3>
+            <p class="route">GET /demo/users/{id}</p>
+            <label>用户 ID</label>
+            <input data-param="id" value="1" required>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+
+        <form class="card request" data-method="GET" data-path="/demo/orders">
+            <h3>内存订单列表</h3>
+            <p class="route">GET /demo/orders</p>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+
+        <form class="card request" data-method="GET" data-path="/demo/orders/{orderId}/users/{userId}">
+            <h3>演示创建订单</h3>
+            <p class="route">GET /demo/orders/{orderId}/users/{userId}</p>
+            <p class="hint">仅组装返回对象，不会保存到数据库。</p>
+            <label>订单 ID</label>
+            <input data-param="orderId" value="100" required>
+            <label>用户 ID</label>
+            <input data-param="userId" value="1" required>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+    </div>
+</section>
+
+<section>
+    <h2>数据库接口</h2>
+    <p class="hint">订单的 userId 必须是数据库中已有的用户 ID；再次新增用户时请使用未占用的邮箱。</p>
+    <div class="cards">
+        <form class="card request" data-method="GET" data-path="/demo/db/users">
+            <h3>数据库用户列表</h3>
+            <p class="route">GET /demo/db/users</p>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+
+        <form class="card request" data-method="GET" data-path="/demo/db/users/{id}">
+            <h3>查询数据库用户</h3>
+            <p class="route">GET /demo/db/users/{id}</p>
+            <label>用户 ID</label>
+            <input data-param="id" value="1" required>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+
+        <form class="card request" data-method="POST" data-path="/demo/db/users" data-body>
+            <h3>新增单个用户</h3>
+            <p class="route">POST /demo/db/users</p>
+            <label>JSON 请求体</label>
+            <textarea spellcheck="false">{
+  "name": "新用户",
+  "age": 25,
+  "email": "new-user@example.com"
+}</textarea>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+
+        <form class="card request" data-method="POST" data-path="/demo/db/users/batch" data-body>
+            <h3>批量新增用户</h3>
+            <p class="route">POST /demo/db/users/batch</p>
+            <label>JSON 数组请求体</label>
+            <textarea spellcheck="false">[
+  {
+    "name": "批量用户一",
+    "age": 25,
+    "email": "batch-user-1@example.com"
+  },
+  {
+    "name": "批量用户二",
+    "age": 28,
+    "email": "batch-user-2@example.com"
+  }
+]</textarea>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+
+        <form class="card request" data-method="GET" data-path="/demo/db/orders">
+            <h3>数据库订单列表</h3>
+            <p class="route">GET /demo/db/orders</p>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+
+        <form class="card request" data-method="POST" data-path="/demo/db/orders" data-body>
+            <h3>新增单个订单</h3>
+            <p class="route">POST /demo/db/orders</p>
+            <label>JSON 请求体</label>
+            <textarea spellcheck="false">{
+  "userId": 1,
+  "product": "键盘",
+  "amount": 299.00
+}</textarea>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+
+        <form class="card request" data-method="POST" data-path="/demo/db/orders/batch" data-body>
+            <h3>批量新增订单</h3>
+            <p class="route">POST /demo/db/orders/batch</p>
+            <label>JSON 数组请求体</label>
+            <textarea spellcheck="false">[
+  {
+    "userId": 1,
+    "product": "键盘",
+    "amount": 299.00
+  },
+  {
+    "userId": 1,
+    "product": "鼠标",
+    "amount": 89.50
+  }
+]</textarea>
+            <button type="submit">发送请求</button><span class="status"></span>
+            <pre class="response">响应结果显示在这里</pre>
+        </form>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll(".request").forEach((form) => {
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const button = form.querySelector("button");
+            const status = form.querySelector(".status");
+            const responseElement = form.querySelector(".response");
+            const method = form.dataset.method;
+            const baseUrl = document.getElementById("baseUrl").value.trim().replace(/\/+$/, "");
+            let path = form.dataset.path;
+
+            if (!baseUrl) {
+                status.textContent = "请填写后端地址";
+                status.className = "status error";
+                return;
+            }
+
+            form.querySelectorAll("[data-param]").forEach((input) => {
+                path = path.replace(
+                    "{" + input.dataset.param + "}",
+                    encodeURIComponent(input.value.trim())
+                );
+            });
+
+            const options = {method: method, headers: {}};
+            if (form.hasAttribute("data-body")) {
+                try {
+                    options.body = form.querySelector("textarea").value;
+                    JSON.parse(options.body);
+                    options.headers["Content-Type"] = "application/json";
+                } catch (error) {
+                    status.textContent = "JSON 格式错误";
+                    status.className = "status error";
+                    responseElement.textContent = error.message;
+                    return;
+                }
+            }
+
+            button.disabled = true;
+            status.textContent = "请求中…";
+            status.className = "status";
+            responseElement.textContent = "";
+
+            try {
+                const response = await fetch(baseUrl + path, options);
+                const text = await response.text();
+                let result = text;
+                try {
+                    result = JSON.stringify(JSON.parse(text), null, 2);
+                } catch (error) {
+                    // Keep non-JSON responses as text.
+                }
+                status.textContent = response.status + " " + response.statusText;
+                status.className = response.ok ? "status" : "status error";
+                responseElement.textContent = result || "(空响应)";
+            } catch (error) {
+                status.textContent = "请求失败";
+                status.className = "status error";
+                responseElement.textContent = error.message
+                    + "\n检查后端地址、服务状态，以及浏览器控制台中的 CORS 错误。";
+            } finally {
+                button.disabled = false;
+            }
+        });
+    });
+</script>
+</body>
+</html>
