@@ -33,6 +33,12 @@ java -jar demo-shop-web\target\demo-shop-web-1.0-SNAPSHOT.jar
 `-pl` 选择 web 模块，`-am` 同时构建它依赖的模块。服务启动后可试：
 
 ```text
+http://localhost:8081/api-test.html
+```
+
+打开接口测试页可以调用下面列出的接口。也可直接访问：
+
+```text
 GET http://localhost:8081/demo/users
 GET http://localhost:8081/demo/users/1
 GET http://localhost:8081/demo/orders
