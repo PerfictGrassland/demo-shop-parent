@@ -33,11 +33,36 @@ java -jar demo-shop-web\target\demo-shop-web-1.0-SNAPSHOT.jar
 `-pl` 选择 web 模块，`-am` 同时构建它依赖的模块。服务启动后可试：
 
 ```text
-GET http://localhost:8080/demo/users
-GET http://localhost:8080/demo/users/1
-GET http://localhost:8080/demo/orders
-GET http://localhost:8080/demo/orders/100/users/1
+GET http://localhost:8081/demo/users
+GET http://localhost:8081/demo/users/1
+GET http://localhost:8081/demo/orders
+GET http://localhost:8081/demo/orders/100/users/1
+GET http://localhost:8081/demo/db/users
+GET http://localhost:8081/demo/db/orders
 ```
+
+数据库写入接口使用 JSON 请求体，单条接口返回受影响行数，批量接口返回成功写入的条数。批量写入在事务中执行：
+
+```text
+POST http://localhost:8081/demo/db/users
+POST http://localhost:8081/demo/db/users/batch
+POST http://localhost:8081/demo/db/orders
+POST http://localhost:8081/demo/db/orders/batch
+```
+
+用户请求示例：
+
+```json
+{"name":"王五","age":25,"email":"wangwu@example.com"}
+```
+
+批量用户请求体是上述对象组成的 JSON 数组。订单请求示例：
+
+```json
+{"userId":1,"product":"键盘","amount":299.00}
+```
+
+批量订单请求体是上述对象组成的 JSON 数组。插入时数据库生成 ID；订单创建时间由数据库设置。请确保数据库中已存在对应的用户记录。
 
 也可以运行模块间调用的单元测试：
 
