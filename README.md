@@ -33,7 +33,9 @@ java -jar demo-shop-web\target\demo-shop-web-1.0-SNAPSHOT.jar
 `-pl` 选择 web 模块，`-am` 同时构建它依赖的模块。服务启动后可试：
 
 ```text
+GET http://localhost:8080/demo/users
 GET http://localhost:8080/demo/users/1
+GET http://localhost:8080/demo/orders
 GET http://localhost:8080/demo/orders/100/users/1
 ```
 
